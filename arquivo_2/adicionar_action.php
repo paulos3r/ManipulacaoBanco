@@ -1,29 +1,26 @@
 <?php
+
 require 'config.php';
+require 'dao/UsuarioDAO.php';
+
+$usuarioDao = new UsuarioDAO($pdo);
 
 $name = filter_input(INPUT_POST, 'name');
 $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 $telefone = filter_input(INPUT_POST, 'telefone');
 
 if($name && $email){
-    $sql = "SELECT * FROM aluno WHERE email = :email";
-    
-    $result = $pdo->prepare($sql);
-    $result->bindValue(':email', $email);
-    $result->execute();
 
-    if($result->rowCount() === 0){
-
-        $sql = "INSERT INTO aluno (nome, email, telefone) VALUES (:name, :email, :telefone)";
+    if($usuarioDao->findByEmail($email) === false){
         
-        $result = $pdo->prepare($sql);
-    
-        $result->bindValue(':name', $name);
-        $result->bindValue(':email', $email);
-        $result->bindValue(':telefone', $telefone);
-    
-        $result->execute();
-    
+        $novoUsuario = new Usuario();
+
+        $novoUsuario->setNome($nome);
+        $novoUsuario->setEmail($email);
+        $novoUsuario->setTelefone($telefone);
+
+        $usuarioDao->add($novoUsuario);
+
         header("Location: index.php");
     
         exit;

@@ -1,33 +1,26 @@
 
 <?php 
-    require 'config.php';
+require 'config.php';
+require 'dao/UsuarioDAO.php';
+    
+$usuarioDao = new UsuarioDAO($pdo);
 
-    $informacoesUsuario = [];
-    $id = filter_input(INPUT_GET, 'id');
+$informacoesUsuario = false;
+$id = filter_input(INPUT_GET, 'id');
 
-    if ($id){
-        try{ 
+if ($id){
+    try{ 
+
+        $informacoesUsuario = $usuarioDao->findById($id);
             
-            $sql = "SELECT * FROM aluno WHERE id = :id";
-            $result = $pdo->prepare($sql);
-
-            $result->bindValue(':id', $id);
-            $result->execute();
-            
-        }catch(Exception $e){
-            print_r($e);
-        }
-
-        if($result->rowCount() > 0){
-            $informacoesUsuario = $result->fetch( PDO::FETCH_ASSOC );
-        }else {
-            header('Location: index.php' );
-            exit;
-        }
-    }else{
-        header('Location: index.php' );
-        exit;
+    }catch(Exception $e){
+        print_r($e);
     }
+}if ($usuario === false ){
+    header('Location: index.php' );
+    exit;
+}
+
 ?>
 <h1>Editar usúario</h1>
 

@@ -53,11 +53,50 @@ class UsuarioDAO implements UsuarioInterface
         return $array;
     }
 
-    public function findById($id){}
+    public function findById($id){
 
-    public function update(Usuario $usuario){}
+        $sql = "SELECT * FROM aluno WHERE id = :id";
 
-    public function delete($id){}
+        $result = $this->pdo->prepare($sql);
+        $result->bindValue(':id', $id);
+        $result->execute();
+
+        if($result->rowCount() > 0){
+            $data = $result->fetch();
+
+            $usuario = new Usuario();
+
+            $usuario->setId($data['id']);
+            $usuario->setNome($data['nome']);
+            $usuario->setEmail($data['email']);
+            $usuario->setTelefone($data['telefone']);
+
+            return $usuario;
+        }else{
+            return false;
+        }
+    }
+
+    public function update(Usuario $usuario){
+        $sql = "UPDATE aluno SET nome = :nome, email = :email, id = :id";
+        $atualizar = $this->pdo->prepare($sql);
+
+        $atualizar->bindValue(':nome', $usuario->getNome());
+        $atualizar->bindValue(':email', $usuario->getEmail());
+        $atualizar->bindValue(':telefone', $usuario->getTelefone());
+        $atualizar->execute();
+
+        return true;
+    }
+
+    public function delete($id){
+        $sql = "DELETE FROM aluno WHERE id = :id";
+
+        $usuario = $this->pdo->prepare($sql);
+
+        $usuario->bindValue(':id', $id);
+        $usuario->execute();
+    }
 
     public function findByEmail($email){
         $sql = "SELECT * FROM aluno WHERE email = :email";

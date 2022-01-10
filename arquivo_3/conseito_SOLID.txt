@@ -1,0 +1,5 @@
+S - Single Responsability Principe (Principio da responsabilidade unica)
+O - Open-Closed Principe (Principio Aberto-Fechado)
+L - Liskov Substitution Principe (Principio da sustituição de Liskov)
+I - Interface Segregation Principe (Principio da Segregação da Interface)
+D - Dependency Inversion Principe (Principio da inversão da dependência)
